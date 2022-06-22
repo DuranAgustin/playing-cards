@@ -4,8 +4,10 @@ import com.tlglearning.playingcards.model.Card;
 import com.tlglearning.playingcards.model.Deck;
 import com.tlglearning.playingcards.model.Suit;
 
-
-import java.util.*;
+import java.util.Comparator;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Random;
 
 public class CardTrick {
     private final Deque<Card> blackPile;
@@ -62,29 +64,17 @@ public class CardTrick {
                 redCount++;
             }
         }
-        class DisplayComparator implements Comparator<Card> {
-            @Override
-            public int compare(Card card1, Card card2) {
-                int comparison = card1.getSuit().getColor().compareTo(card2.getSuit().getColor());
-                comparison = (comparison != 0) ? comparison : card1.getSuit().compareTo(card2.getSuit());
-                comparison = (comparison != 0) ? comparison : card1.getRank().compareTo(card2.getRank());
-                return comparison;
-            }
-        }
 
-        Comparator<Card> comparator = new Comparator<>() {
-            @Override
-            public int compare(Card card1, Card card2) {
-                int comparison = card1.getSuit().getColor().compareTo(card2.getSuit().getColor());
-                comparison = (comparison != 0) ? comparison : card1.getSuit().compareTo(card2.getSuit());
-                comparison = (comparison != 0) ? comparison : card1.getRank().compareTo(card2.getRank());
-                return comparison;
-            }
+        Comparator<Card> comparator = (card1, card2) -> {
+            int comparison = card1.getSuit().getColor().compareTo(card2.getSuit().getColor());
+            comparison = (comparison != 0) ? comparison : card1.getSuit().compareTo(card2.getSuit());
+            comparison = (comparison != 0) ? comparison : card1.getRank().compareTo(card2.getRank());
+            return comparison;
         };
 
 
-        Collections.sort((LinkedList<Card>) blackPile, comparator);
-        Collections.sort((LinkedList<Card>) redPile, comparator);
+        ((LinkedList<Card>) blackPile).sort(comparator);
+        ((LinkedList<Card>) redPile).sort(comparator);
 
         System.out.printf("Black: count =%d, cards=%s%n", blackCount, blackPile);
         System.out.printf("Red: count =%d, cards=%s%n", redCount, redPile);
